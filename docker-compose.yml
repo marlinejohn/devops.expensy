@@ -1,0 +1,47 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis
+    container_name: redis
+    command: redis-server --requirepass someredispassword
+    ports:
+      - "6379:6379"
+    networks:
+      - expensy-net
+
+  mongo:
+    image: mongo
+    container_name: mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    networks:
+      - expensy-net
+
+  backend:
+    image: marlinejohn/expensy-backend
+    container_name: backend
+    ports:
+      - "8706:8706"
+    networks:
+      - expensy-net
+    depends_on:
+      - mongo
+      - redis
+
+  frontend:
+    image: marlinejohn/expensy-frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - expensy-net
+    depends_on:
+      - backend
+
+networks:
+  expensy-net:
+    driver: bridge
