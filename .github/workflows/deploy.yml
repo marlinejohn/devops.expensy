@@ -1,0 +1,39 @@
+name: Build & Push Docker Images
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    env:
+      FRONTEND_IMAGE: marlinejohn/expensy-frontend:latest
+      BACKEND_IMAGE: marlinejohn/expensy-backend:latest
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🔧 Set up Node.js (for dependency resolution)
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: 🔑 Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 🏗️ Build frontend Docker image
+        run: docker build -t $FRONTEND_IMAGE ./expensy_frontend
+
+      - name: 🏗️ Build backend Docker image
+        run: docker build -t $BACKEND_IMAGE ./expensy_backend
+
+      - name: 🚀 Push frontend image
+        run: docker push $FRONTEND_IMAGE
+
+      - name: 🚀 Push backend image
+        run: docker push $BACKEND_IMAGE
