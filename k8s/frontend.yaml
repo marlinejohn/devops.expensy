@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expensy-frontend
+  namespace: marline-expensy
+  labels:
+    app: expensy-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: expensy-frontend
+  template:
+    metadata:
+      labels:
+        app: expensy-frontend
+    spec:
+      containers:
+        - name: expensy-frontend
+          image: marlinejohn/expensy-frontend:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: BACKEND_URL
+              value: "http://expensy-backend.marline-expensy.svc.cluster.local:8706"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: expensy-frontend
+  namespace: marline-expensy
+spec:
+  selector:
+    app: expensy-frontend
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
