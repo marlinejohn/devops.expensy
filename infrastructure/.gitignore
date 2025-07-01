@@ -1,0 +1,7 @@
+# Terraform state and cache
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Sensitive input variables
+terraform.tfvars
