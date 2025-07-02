@@ -37,3 +37,22 @@ jobs:
 
       - name: 🚀 Push backend image
         run: docker push $BACKEND_IMAGE
+
+      - name: ⚙️ Set up kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: v1.29.0
+
+      - name: 🔐 Set up kubeconfig from GitHub secret
+        run: |
+          echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > kubeconfig
+          export KUBECONFIG=$PWD/kubeconfig
+          kubectl config use-context $(kubectl config current-context)
+
+      - name: 🚀 Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/mongo.yaml
+          kubectl apply -f k8s/redis.yaml
+          kubectl apply -f k8s/backend.yaml
+          kubectl apply -f k8s/frontend.yaml
+          kubectl apply -f k8s/ingress.yaml
