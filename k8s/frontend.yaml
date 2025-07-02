@@ -22,7 +22,7 @@ spec:
             - containerPort: 3000
           env:
             - name: NEXT_PUBLIC_API_URL
-              value: "http://aa21efd8031bf4c07a19d92e8c39243d-522384215.eu-north-1.elb.amazonaws.com"
+              value: "http://api-expensy.marlinejohn.com"
 
 ---
 apiVersion: v1
