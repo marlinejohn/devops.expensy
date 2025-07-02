@@ -38,16 +38,15 @@ jobs:
       - name: 🚀 Push backend image
         run: docker push $BACKEND_IMAGE
 
-      - name: ⚙️ Set up kubectl
-        uses: azure/setup-kubectl@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          version: v1.29.0
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: 🔐 Set up kubeconfig from GitHub secret
-        run: |
-          echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > kubeconfig
-          export KUBECONFIG=$PWD/kubeconfig
-          kubectl config use-context $(kubectl config current-context)
+      - name: Configure kubectl for EKS
+        run: aws eks update-kubeconfig --name marline-expensy-cluster --region ${{ secrets.AWS_REGION }}
 
       - name: 🚀 Deploy to Kubernetes
         run: |
