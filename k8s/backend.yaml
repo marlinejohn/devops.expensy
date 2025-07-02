@@ -22,10 +22,13 @@ spec:
             - containerPort: 8706
           env:
             - name: DATABASE_URI
-              valueFrom:
-                secretKeyRef:
-                  name: expensy-secrets
-                  key: DATABASE_URI
+              value: "mongodb://root:example@mongo:27017"
+            - name: REDIS_HOST
+              value: "redis"
+            - name: REDIS_PORT
+              value: "6379"
+            - name: REDIS_PASSWORD
+              value: "someredispassword"
 
 ---
 apiVersion: v1
@@ -39,4 +42,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8706
-  type: ClusterIP
+  type: LoadBalancer
