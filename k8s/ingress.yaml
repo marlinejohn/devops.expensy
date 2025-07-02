@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: expensy-ingress
+  namespace: marline-expensy
+  annotations: {}
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api-expensy.marlinejohn.com
+      http:
+        paths:
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: expensy-backend
+                port:
+                  number: 80
+    - host: app-expensy.marlinejohn.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: expensy-frontend
+                port:
+                  number: 3000
