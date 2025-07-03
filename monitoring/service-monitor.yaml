@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: expensy-backend
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: expensy-backend
+  namespaceSelector:
+    matchNames:
+      - marline-expensy
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
