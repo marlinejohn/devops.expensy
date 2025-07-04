@@ -82,8 +82,12 @@ module "eks_node_group" {
   max_size     = 4
   min_size     = 1
 
-  instance_types = ["t3.medium"]
+   instance_types = ["t3.medium"]
+  ami_type       = "AL2_x86_64"
+  capacity_type  = "ON_DEMAND"
 
   cluster_service_cidr = "172.20.0.0/16"
+
+  bootstrap_extra_args = "--use-max-pods false --kubelet-extra-args '--max-pods=110'"
 }
 
